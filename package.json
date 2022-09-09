@@ -1,4 +1,23 @@
 {
+  "name": "projeto13-mywallet-back",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanditomaz/My-Wallet-Back-End.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sanditomaz/My-Wallet-Back-End/issues"
+  },
+  "homepage": "https://github.com/sanditomaz/My-Wallet-Back-End#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dayjs": "^1.11.5",
