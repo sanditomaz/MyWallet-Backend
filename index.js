@@ -33,7 +33,7 @@ const loginSchema = joi.object({
 
 const transactionSchema = joi.object({
   description: joi.string().trim().min(1).required(),
-  value: joi.string().trim().min(1).required(),
+  number: joi.string().trim().min(1).required(),
 });
 
 app.post("/register", async (req, res) => {
@@ -150,10 +150,10 @@ app.post("/addmoney", async (req, res) => {
     }
 
     const insertMoney = {
-      value: req.body.value,
+      value: req.body.number,
       description: req.body.description,
       status: "green",
-      date: dayjs().format("MM/DD/YYYY"),
+      date: dayjs().format("MM/DD"),
       userId: user._id,
     };
 
@@ -188,7 +188,6 @@ app.post("/withdraw", async (req, res) => {
     });
 
     if (!session) {
-      console.log(session);
       return res.send(401);
     }
 
@@ -201,10 +200,10 @@ app.post("/withdraw", async (req, res) => {
     }
 
     const withdrawal = {
-      value: req.body.value,
+      value: req.body.number,
       description: req.body.description,
       status: "red",
-      date: dayjs().format("MM/DD/YYYY"),
+      date: dayjs().format("MM/DD"),
       userId: user._id,
     };
 
@@ -238,15 +237,19 @@ app.get("/home", async (req, res) => {
 
     if (user) {
       delete user.password;
-      return res.send(200);
     }
 
-    res.sendStatus(200);
+    const transaction = await db
+      .collection("transactions")
+      .find({
+        userId: session.userId,
+      })
+      .toArray();
+
+    res.send(transaction);
   } catch (error) {
     res.sendStatus(500);
   }
-
-  res.sendStatus(200);
 });
 
 app.listen(5000, () => console.log("Listening on port 5000"));
