@@ -188,6 +188,7 @@ app.post("/withdraw", async (req, res) => {
     });
 
     if (!session) {
+      console.log(session);
       return res.send(401);
     }
 
