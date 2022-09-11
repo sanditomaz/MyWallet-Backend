@@ -219,7 +219,7 @@ app.get("/home", async (req, res) => {
   const token = req.headers.authorization?.replace("Bearer ", "");
 
   if (!token) {
-    return res.send(401);
+    return res.status(401).send("Unauthorized Access!");
   }
 
   try {
@@ -228,7 +228,7 @@ app.get("/home", async (req, res) => {
     });
 
     if (!session) {
-      return res.send(401);
+      return res.status(401).send("Unauthorized Access!");
     }
 
     const user = await db.collection("userData").findOne({
@@ -247,6 +247,23 @@ app.get("/home", async (req, res) => {
       .toArray();
 
     res.send(transaction);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+});
+
+app.post("/home", async (req, res) => {
+  const token = req.headers.authorization?.replace("Bearer ", "");
+
+  if (!token) {
+    return res.send(401);
+  }
+
+  try {
+    const session = await db.collection("sessions").deleteOne({
+      token,
+    });
+    res.send(200);
   } catch (error) {
     res.sendStatus(500);
   }
