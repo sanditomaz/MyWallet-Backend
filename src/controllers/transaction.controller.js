@@ -18,28 +18,8 @@ async function addUserMoney(req, res) {
     return;
   }
 
-  const token = req.headers.authorization?.replace("Bearer ", "");
-
-  if (!token) {
-    return res.send(401);
-  }
-
   try {
-    const session = await db.collection("sessions").findOne({
-      token,
-    });
-
-    if (!session) {
-      return res.send(401);
-    }
-
-    const user = await db.collection("userData").findOne({
-      _id: session.userId,
-    });
-
-    if (user) {
-      delete user.password;
-    }
+    const user = res.locals.user;
 
     const insertMoney = {
       value: req.body.number,
@@ -68,28 +48,8 @@ async function addUserWithdraw(req, res) {
     return;
   }
 
-  const token = req.headers.authorization?.replace("Bearer ", "");
-
-  if (!token) {
-    return res.send(401);
-  }
-
   try {
-    const session = await db.collection("sessions").findOne({
-      token,
-    });
-
-    if (!session) {
-      return res.send(401);
-    }
-
-    const user = await db.collection("userData").findOne({
-      _id: session.userId,
-    });
-
-    if (user) {
-      delete user.password;
-    }
+    const user = res.locals.user;
 
     const withdrawal = {
       value: req.body.number,
@@ -108,33 +68,13 @@ async function addUserWithdraw(req, res) {
 }
 
 async function showUserTransactions(req, res) {
-  const token = req.headers.authorization?.replace("Bearer ", "");
-
-  if (!token) {
-    return res.status(401).send("Unauthorized Access!");
-  }
-
   try {
-    const session = await db.collection("sessions").findOne({
-      token,
-    });
-
-    if (!session) {
-      return res.status(401).send("Unauthorized Access!");
-    }
-
-    const user = await db.collection("userData").findOne({
-      _id: session.userId,
-    });
-
-    if (user) {
-      delete user.password;
-    }
+    const user = res.locals.user;
 
     const transaction = await db
       .collection("transactions")
       .find({
-        userId: session.userId,
+        userId: user._id,
       })
       .toArray();
 
